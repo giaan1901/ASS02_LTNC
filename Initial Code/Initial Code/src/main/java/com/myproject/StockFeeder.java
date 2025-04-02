@@ -20,7 +20,9 @@ public class StockFeeder {
 
     public void addStock(Stock stock) {
         // TODO: Implement adding a stock to stockList
-        stockList.add(stock);
+        if (!stockList.contains(stock)) {
+            stockList.add(stock);
+        }
     }
 
     public void registerViewer(String code, StockViewer stockViewer) {
@@ -37,24 +39,21 @@ public class StockFeeder {
 
     public void unregisterViewer(String code, StockViewer stockViewer) {
         // TODO: Implement unregister logic, including error logging
-        boolean flag = false;
-        for (Stock stock : stockList) {
-            if (stock.getCode() == code) { 
-                viewers.remove(code, stockViewer); 
-                flag = true;
-            }
+        List<StockViewer> ListViewer = viewers.get(code);
+        if (ListViewer == null) Logger.errorUnregister(code);
+        else {
+            ListViewer.remove(stockViewer);
+            viewers.remove(code);
+            viewers.put(code, ListViewer); 
         }
-        if (!flag) Logger.errorUnregister(code);;
     }
 
     public void notify(StockPrice stockPrice) {
         // TODO: Implement notifying registered viewers about price updates
-        for (String stockCode : viewers.keySet()) {
-            List<StockViewer> viewerList = viewers.get(stockCode);
-
-            for (StockViewer viewer : viewerList) {
-                viewer.onUpdate(stockPrice);
-            }
-        }
+        String code = stockPrice.getCode();
+        List<StockViewer> ListViewer = viewers.get(code);
+        for (StockViewer viewer : ListViewer) {
+            viewer.onUpdate(stockPrice);
+        }         
     }
 }
