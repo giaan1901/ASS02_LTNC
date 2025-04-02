@@ -17,12 +17,14 @@ public class StockAlertView implements StockViewer {
     @Override
     public void onUpdate(StockPrice stockPrice) {
         // TODO: Implement alert logic based on threshold conditions
-        if (stockPrice.getAvgPrice() > alertThresholdHigh) {
-            alertAbove(stockPrice.getCode(), stockPrice.getAvgPrice()); 
-            lastAlertedPrices.put(stockPrice.getCode(), stockPrice.getAvgPrice());
-        }
-        if (stockPrice.getAvgPrice() < alertThresholdLow) {
-            alertBelow(stockPrice.getCode(), stockPrice.getAvgPrice());
+        String code = stockPrice.getCode();
+        if (lastAlertedPrices.isEmpty() || lastAlertedPrices.get(code) == null || (stockPrice.getAvgPrice() != lastAlertedPrices.get(code))) {
+            if (stockPrice.getAvgPrice() >= alertThresholdHigh) {
+                alertAbove(stockPrice.getCode(), stockPrice.getAvgPrice()); 
+            } 
+            if (stockPrice.getAvgPrice() <= alertThresholdLow) {
+                alertBelow(stockPrice.getCode(), stockPrice.getAvgPrice());
+            }
             lastAlertedPrices.put(stockPrice.getCode(), stockPrice.getAvgPrice());
         }
     }
