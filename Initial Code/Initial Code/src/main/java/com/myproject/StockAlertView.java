@@ -22,7 +22,7 @@ public class StockAlertView implements StockViewer {
             if (stockPrice.getAvgPrice() >= alertThresholdHigh) {
                 alertAbove(stockPrice.getCode(), stockPrice.getAvgPrice()); 
             } 
-            if (stockPrice.getAvgPrice() <= alertThresholdLow) {
+            else if (stockPrice.getAvgPrice() <= alertThresholdLow) {
                 alertBelow(stockPrice.getCode(), stockPrice.getAvgPrice());
             }
             lastAlertedPrices.put(stockPrice.getCode(), stockPrice.getAvgPrice());
